@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import "./styles/globals.css";
 import confetti from "canvas-confetti";
 
+//const confetti = require("canvas-confetti");
 const IndexPage = () => {
   const [fromCountry, setFromCountry] = useState("");
   const [toCountry, setToCountry] = useState("USD"); // Defaulting to USD
