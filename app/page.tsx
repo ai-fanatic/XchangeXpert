@@ -12,17 +12,10 @@ const IndexPage = () => {
   const [convertedAmount, setConvertedAmount] = useState("");
   const [exchangeRate, setExchangeRate] = useState(""); // New state for exchange rate
   const [showHistory, setShowHistory] = useState(false);
-  const [conversionHistory, setConversionHistory] = useState([]);
 
   const handleSwap = () => {
     setFromCountry(toCountry);
     setToCountry(fromCountry);
-  };
-
-  const handleShowHistory = () => {
-    const history = JSON.parse(localStorage.getItem("conversions")) || [];
-    setConversionHistory(history);
-    setShowHistory(true);
   };
 
   const convertCurrency = async () => {
@@ -43,11 +36,6 @@ const IndexPage = () => {
       convertedAmount: data.conversion_result,
       exchangeRate: data.conversion_rate,
     };
-
-    const existingConversions =
-      JSON.parse(localStorage.getItem("conversions")) || [];
-    existingConversions.push(newConversion);
-    localStorage.setItem("conversions", JSON.stringify(existingConversions));
   };
 
   const triggerConfetti = () => {
@@ -118,21 +106,6 @@ const IndexPage = () => {
           </table>
         )}
       </div>
-      {/* <button onClick={handleShowHistory}>Previous History</button> */}
-
-      {showHistory && (
-        <div className="popup">
-          <button onClick={() => setShowHistory(false)}>Close</button>
-          <ul>
-            {conversionHistory.map((item, index) => (
-              <li key={index}>
-                {item.fromCountry} to {item.toCountry}: {item.amount} -> {item.convertedAmount} at rate {item.exchangeRate}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-
     </div>
   );
 };
