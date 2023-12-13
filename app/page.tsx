@@ -10,10 +10,19 @@ const IndexPage = () => {
   const [toCountry, setToCountry] = useState("USD"); // Defaulting to USD
   const [amount, setAmount] = useState("");
   const [convertedAmount, setConvertedAmount] = useState("");
+  const [exchangeRate, setExchangeRate] = useState(""); // New state for exchange rate
+  const [showHistory, setShowHistory] = useState(false);
+  const [conversionHistory, setConversionHistory] = useState([]);
 
   const handleSwap = () => {
     setFromCountry(toCountry);
     setToCountry(fromCountry);
+  };
+
+  const handleShowHistory = () => {
+    const history = JSON.parse(localStorage.getItem("conversions")) || [];
+    setConversionHistory(history);
+    setShowHistory(true);
   };
 
   const convertCurrency = async () => {
@@ -23,8 +32,24 @@ const IndexPage = () => {
 
     const data = await response.json();
     setConvertedAmount(data.conversion_result);
+    setExchangeRate(data.conversion_rate);
     triggerConfetti();
+
+    // Store conversion history
+    const newConversion = {
+      fromCountry,
+      toCountry,
+      amount,
+      convertedAmount: data.conversion_result,
+      exchangeRate: data.conversion_rate,
+    };
+
+    const existingConversions =
+      JSON.parse(localStorage.getItem("conversions")) || [];
+    existingConversions.push(newConversion);
+    localStorage.setItem("conversions", JSON.stringify(existingConversions));
   };
+
   const triggerConfetti = () => {
     confetti({
       angle: 60,
@@ -72,9 +97,42 @@ const IndexPage = () => {
       <div className="button-container">
         <button onClick={convertCurrency}>Convert</button>
       </div>
+
       <div className="center-content">
-        {convertedAmount && <p>Exchange Rate: {convertedAmount}</p>}
+        {(convertedAmount || exchangeRate) && (
+          <table>
+            <tbody>
+              {exchangeRate && (
+                <tr>
+                  <td>Exchange Rate:</td>
+                  <td>{exchangeRate}</td>
+                </tr>
+              )}
+              {convertedAmount && (
+                <tr>
+                  <td>Converted Amount:</td>
+                  <td>{convertedAmount}</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        )}
       </div>
+      {/* <button onClick={handleShowHistory}>Previous History</button> */}
+
+      {showHistory && (
+        <div className="popup">
+          <button onClick={() => setShowHistory(false)}>Close</button>
+          <ul>
+            {conversionHistory.map((item, index) => (
+              <li key={index}>
+                {item.fromCountry} to {item.toCountry}: {item.amount} -> {item.convertedAmount} at rate {item.exchangeRate}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
     </div>
   );
 };

@@ -60,7 +60,8 @@ nav ul li {
 }
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap");
 h1 {
-  font-family: "Montserrat", sans-serif;
+  font-family: "Montserrat", Cambria, Cochin, Georgia, Times, "Times New Roman",
+    serif;
   font-size: 72px; /* Ultra-large font size */
   text-align: center;
   font-weight: 700; /* Bold font-weight */
@@ -78,4 +79,24 @@ h1 {
   justify-content: center;
   align-items: center;
   margin-top: 20px; /* Adjust as needed */
+}
+
+table {
+  border-collapse: collapse;
+  width: 30%;
+}
+
+td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.popup {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #ddd;
+  padding: 20px;
 }
